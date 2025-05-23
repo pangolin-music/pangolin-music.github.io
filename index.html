@@ -223,8 +223,15 @@
 <label>Scale<select id="scale-select"></select></label>
 <label>Number of Strings<select id="strings-select"></select></label>
 <div id="tunings"></div>
+
 </section>
-<section id="fretboard-section"><svg id="fretboard"></svg></section>
+<section id="scale-description" style="background-color: #fdfdfd; padding: 0.8rem 1rem; text-align: center; font-size: 0.85rem; color: #333; font-style: italic; max-width: 800px; margin: auto;">
+  <p id="scale-mood-text">
+    Loading scale mood description...
+  </p>
+</section>
+<section id="fretboard-section">
+<svg id="fretboard"></svg></section>
 <header id="site-header" style="padding-top: 2rem; padding-bottom: 2rem;">
 <img alt="Logo Pangolino" id="pangolino3" src="pangolino3.png" class="pangolino-img" style="width: 200px; height: auto; animation: rotateClockwise 40s linear infinite;"/>
 <h1 style="">Chord Construction</h1>
@@ -323,6 +330,38 @@
     }
 
     window.onload = init;
+
+  const scaleDescriptions = {
+    'Major (Ionian)': 'Bright, happy, stable. Common in pop, rock, and classical music.',
+    'Dorian': 'Minor but groovy. Used in funk, fusion, and progressive metal.',
+    'Phrygian': 'Dark, exotic, tense. Typical in flamenco and extreme metal.',
+    'Lydian': 'Dreamy, floating, uplifting. Common in cinematic scores and jazz.',
+    'Mixolydian': 'Bluesy and rebellious. Common in rock and southern metal.',
+    'Minor (Aeolian)': 'Sad, emotional, introspective. Core of most metal and melancholic genres.',
+    'Locrian': 'Unstable, dissonant, eerie. Rarely used but powerful for dissonance.',
+    'Harmonic Minor': 'Dramatic, eastern flavor. Used in neoclassical, metal, and traditional music.',
+    'Melodic Minor': 'Complex, sophisticated. Appears in jazz and progressive music.',
+    'Double Harmonic Major': 'Intensely exotic, Arabic/gypsy vibes. Great for dark, mysterious themes.',
+    'Super locrian': 'Ultra tense, used over altered dominants in jazz and fusion.',
+    'Major Pentatonic': 'Simple, bright, folk and blues friendly.',
+    'Minor (Aeolian) Pentatonic': 'Core sound of blues, rock, and metal soloing.',
+    'Dorian Pentatonic': 'A funkier minor pentatonic, with added 6th.',
+    'Phrygian Pentatonic': 'Dark, moody, sharp — ideal for riff-based metal.',
+    'Mixolydian Pentatonic': 'Major with attitude. Good for jam bands and modal soloing.'
+  };
+
+  function updateMoodDescription() {
+    const moodText = document.getElementById('scale-mood-text');
+    const mood = scaleDescriptions[state.scale];
+    moodText.textContent = mood || 'No mood description available for this scale.';
+  }
+
+  const originalUpdate = update;
+  update = function() {
+    originalUpdate();
+    updateMoodDescription();
+  };
+
   </script>
 <header id="site-header" style="flex-direction: column;">
 <img alt="Pangolino Footer" id="site-logo" src="pangolino2.png" class="pangolino-img wobble" style="width: 200px; height: auto;"/>
