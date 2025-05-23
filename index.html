@@ -1,15 +1,18 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta content="ca-pub-3838225596770536" name="google-adsense-account"/>
 <script async="" crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3838225596770536"></script>
+<!-- Import Open Sans for body text -->
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&amp;display=swap" rel="stylesheet"/>
+<!-- Import Sue Ellen Francisco for titles -->
 <link href="https://fonts.googleapis.com/css2?family=Sue+Ellen+Francisco&amp;display=swap" rel="stylesheet"/>
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Pangolin - Guitar Fretboard Visualizer | Scale e Accordi Interattivi</title>
 <style>
+    /* Color variables */
     :root {
       --bg-controls: #E6E6F7;
       --bg-fretboard: #FFFFFF;
@@ -22,18 +25,23 @@
       --fret-line: #BBBBBB;
       --text-color: #525252;
     }
+    /* Base styles */
     html, body { margin: 0; padding: 0; height: 100%; font-family: 'Open Sans', sans-serif; color: var(--text-color); }
     section { width: 100%; box-sizing: border-box; }
+    /* Controls */
+
     #controls {
-      margin: 0;
-      border: none;
-      box-shadow: none;
+  margin: 0;
+  border: none;
+  box-shadow: none;
       background: white;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 1rem;
       padding: 1rem;
+      
+      
     }
     #controls label {
       display: flex;
@@ -48,17 +56,28 @@
       border-radius: 4px;
       border: 1px solid #ccc;
     }
+
+    /* Original styles (overridden below) */
+    #controls {
+  margin: 0;
+  border: none;
+  box-shadow: none; background: var(--bg-controls); display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding: 1rem; }
+    #controls label { display: flex; flex-direction: column; font-size: 0.9rem; }
     #tunings {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: flex-start;
-    }
-    #tunings label {
-      flex: 0 0 auto;
-    }
+ 	 display: flex;
+ 	 flex-wrap: wrap;
+ 	 gap: 0.5rem;
+ 	 justify-content: flex-start;
+	}
+
+	#tunings label {
+ 	 flex: 0 0 auto;
+	}
+
+    /* Fretboard */
     #fretboard-section { background: var(--bg-fretboard); padding: 1rem; }
     #fretboard { display: block; width: 100%; }
+    /* Chords */
     #chords-section { background: var(--bg-chords); padding: 1rem; }
     .degree-section { margin-bottom: 1rem; padding: 0.5rem; background: white;  box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
     .degree-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
@@ -67,46 +86,248 @@
     .degree-buttons button { padding: 0.3rem 0.6rem; border: none; border-radius: 4px; cursor: pointer; background: var(--bg-controls); transition: background 0.2s; }
     .degree-buttons button.selected { background: var(--scale-color); }
     .highlight-btn { padding: 0.3rem 0.8rem; border: none; border-radius: 4px; cursor: pointer; background: var(--root-color); color: white; }
+    /* Site header & logo */
+    #site-header {
+  margin: 0;
+  border: none; display: flex; align-items: center; gap: 1rem;  background-color: var(--bg-controls); justify-content: center; }
     #site-logo { width: 100px; height: 100px; image-rendering: pixelated; }
+
+    /* Main titles: use Sue Ellen Francisco */
     h1 {
       font-family: 'Sue Ellen Francisco', cursive;
       text-align: center;
       margin: 0;
       color: var(--text-color);
       font-size: 3rem;
+      opacity: 0;
+      animation: fadeInTitle 1.2s ease-in forwards, pulse 5s ease-in-out 2s infinite;
+      animation-delay: 0.5s, 2s;
     }
-    #pangolino1, #pangolino4 {
-      animation: wobble 3s infinite ease-in-out;
-      display: block;
-      margin: 1rem auto;
+
+    @media (max-width: 480px) {
+      #site-header {
+  margin: 0;
+  border: none;
+        flex-direction: column;
+        align-items: center;
+      }
+      h1 {
+        text-align: center;
+      }
     }
-    .pangolino-img {
-      display: block;
-      margin: 1rem auto;
-      width: 200px;
-      height: auto;
-    }
-    .pangolino-img.wobble {
-      animation: wobble 3s infinite ease-in-out;
-    }
+
+    /* Animations */
     @keyframes wobble {
       0%, 100% { transform: rotate(0deg); }
       25% { transform: rotate(2.5deg); }
       75% { transform: rotate(-2.5deg); }
     }
+    @keyframes logoEntry {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes fadeInTitle {
+      to { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+    @keyframes fadeBodyIn {
+      to { opacity: 1; }
+    }
+    body {
+      opacity: 0;
+      animation: fadeBodyIn 0.6s ease-out forwards;
+    }
+    #site-logo {
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: logoEntry 1s ease-out forwards, wobble 3s infinite ease-in-out;
+    }
+    #site-logo:hover {
+      transform: rotate(10deg);
+      transition: transform 0.3s ease;
+    }
+    /* Rotating pangolino3 */
+    #pangolino3 {
+      width: 100px;
+      height: 100px;
+      animation: rotateClockwise 40s linear infinite !important;
+    }
+    @keyframes rotateClockwise {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+  
+    header#site-header:nth-of-type(1),
+    header#site-header:nth-of-type(2) {
+      padding-top: 2rem;
+    }
+
+    header#site-header:nth-of-type(2) {
+      padding-bottom: 2rem;
+    }
+
+    #pangolino1, #pangolino4 {
+      animation: wobble 3s infinite ease-in-out;
+      display: block;
+      margin: 1rem auto;
+    }
+    
+.pangolino-img {
+  display: block;
+  margin: 1rem auto;
+  width: 200px;
+  height: auto;
+}
+.pangolino-img.wobble {
+  animation: wobble 3s infinite ease-in-out;
+}
+
 </style>
-</head>
+<meta content="Interactive fretboard viewer with modal scales and chord building for guitarists." name="description"/><meta content="pangolin, guitar fretboard visualizer, chitarra, scale, accordi, strumenti per chitarristi" name="keywords"/><meta content="Dario Zatti" name="author"/></meta></head>
 <body>
-
 <section style="background-color: #f0f7f4; padding: 1.5rem 1rem 0.5rem 1rem; text-align: center;">
-  <h1 style="font-family: 'Sue Ellen Francisco', cursive; font-size: 4rem; margin-bottom: 0rem; color: #333;">PANGOLIN</h1>
-  <img alt="Pangolino Title Image" id="pangolino1" src="pangolino1.png" class="pangolino-img wobble"/>
+<h1 style="font-family: 'Sue Ellen Francisco', cursive; font-size: 4rem; margin-bottom: 0rem; color: #333;">PANGOLIN</h1><img alt="Pangolino Title Image" id="pangolino1" src="pangolino1.png" class="pangolino-img wobble"/>
 </section>
-
-<header id="site-header" style="padding-top: 2rem; padding-bottom: 2rem; display: flex; flex-direction: column; align-items: center;">
-  <img alt="Logo Pangolino" id="pangolino4" src="pangolino4.png" class="pangolino-img wobble" style="width: 200px; height: auto;" />
-  <h1>Fretboard Visualizer</h1>
+<section style="background-color: #f0f7f4; padding: 1rem 1.5rem; text-align: center;">
+<div style="max-width: 1000px; margin: auto;">
+<p style="font-size: 1.1rem;">
+          Pangolin is a free tool designed for modern guitarists. It helps you explore scales, chords and keys through an interactive visualization directly on the guitar fretboard. Intuitive, fast and accessible from any device.
+        </p>
+</div>
+</section>
+<header id="site-header">
+<img alt="Logo Pangolino" id="pangolino4" src="pangolino4.png" class="pangolino-img wobble" style="width: 200px; height: auto;"/>
+<img alt="pangolino4" src="pangolino4.png" class="pangolino-img wobble" style="width: 200px; height: auto;"/>
+<h1 style="">Fretboard Visualizer</h1>
 </header>
+<section style="background-color: #E6E6F7; padding: 1rem 1.5rem; text-align: center;">
+<div style="max-width: 800px; margin: auto;">
+<p style="font-size: 1.05rem;">
+      In the “Fretboard Visualizer” section you can select the key, the musical scale and the number of strings of your guitar. The system shows you the notes of the scale directly on the virtual fretboard. You can customize the tuning of each string to suit your instrument.
+<div style="text-align:center; margin-top: 1rem;">
+<img alt="Rotate Smartphone Icon" src="horizontal.png" style="width: 100px; height: auto;"/>
+</div>
+</p>
+</div>
+</section>
+<section id="controls">
+<label>Root Note<select id="key-select"></select></label>
+<label>Scale<select id="scale-select"></select></label>
+<label>Number of Strings<select id="strings-select"></select></label>
+<div id="tunings"></div>
+</section>
+<section id="fretboard-section"><svg id="fretboard"></svg></section>
+<header id="site-header" style="padding-top: 2rem; padding-bottom: 2rem;">
+<img alt="Logo Pangolino" id="pangolino3" src="pangolino3.png" class="pangolino-img" style="width: 200px; height: auto; animation: rotateClockwise 40s linear infinite;"/>
+<img alt="pangolino3" src="pangolino3.png" class="pangolino-img" style="width: 200px; height: auto; animation: rotateClockwise 40s linear infinite;"/>
+<h1 style="">Chord Construction</h1>
+</header>
+<section style="background-color: #E6E6F7; padding: 1rem 1.5rem; text-align: center;">
+<div style="max-width: 800px; margin: auto;">
+<p style="font-size: 1.05rem;">
+      
+	In the “Chord Construction” section you can build chords by selecting intervals starting from each degree of the scale. You can view the selected notes in real time on the fretboard and experiment with the sound of each chord within the chosen modal context.
+    </p>
+</div>
+</section>
+<section id="chords-section">
+<!-- Dynamic degree sections here -->
+</section>
+<script>
+    const notes = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    const scales = {
+      'Major Pentatonic': [0,2,4,7,9], 'Dorian Pentatonic': [0,2,5,7,10], 'Phrygian Pentatonic': [0,3,5,8,10], 'Mixolydian Pentatonic': [0,2,5,7,9], 'Minor (Aeolian) Pentatonic': [0,3,5,7,10],
+      'Major (Ionian)': [0,2,4,5,7,9,11], 'Dorian': [0,2,3,5,7,9,10], 'Phrygian': [0,1,3,5,7,8,10], 'Lydian': [0,2,4,6,7,9,11], 'Mixolydian': [0,2,4,5,7,9,10],
+      'Minor (Aeolian)': [0,2,3,5,7,8,10], 'Locrian': [0,1,3,5,6,8,10], 'Harmonic Minor': [0,2,3,5,7,8,11], 'Melodic Minor': [0,2,3,5,7,9,11], 'Harmonic Major': [0,2,4,5,7,8,11],
+      'Melodic Major': [0,2,4,5,7,8,10], 'Double Harmonic Major': [0,1,4,5,7,8,11], 'Neapolitan Minor': [0,1,3,5,7,8,11], 'Super locrian': [0,1,3,4,6,8,10], 'Major Bebop': [0,2,4,5,7,8,9,11], 'Minor Bebop': [0,2,3,4,5,7,9,10], 'Dominant Bebop': [0,2,4,5,7,9,10,11]
+    };
+    const defaultTunings = { 1:['E'],2:['B','E'],3:['G','B','E'],4:['D','G','B','E'],5:['A','D','G','B','E'],6:['E','A','D','G','B','E'],7:['B','E','A','D','G','B','E'],8:['E','B','E','A','D','G','B','E'],9:['C#','F#','B','E','A','D','G','B','E'],10:['B','E','A','D','G','B','E','A','D','G'] };
+    const keySelect = document.getElementById('key-select');
+    const scaleSelect = document.getElementById('scale-select');
+    const stringsSelect = document.getElementById('strings-select');
+    const tuningsDiv = document.getElementById('tunings');
+    const svg = document.getElementById('fretboard');
+    const chordsSection = document.getElementById('chords-section');
 
+    let state = { key:'E', scale:'Minor (Aeolian)', strings:8, tuning:[], scaleNotes:[], frets:24, highlight:{ active:false, notes:[] }, chordSelections:{} };
+
+    function init() {
+      notes.forEach(n=> keySelect.innerHTML += `<option>${n}</option>`);
+      Object.keys(scales).forEach(s=> scaleSelect.innerHTML += `<option>${s}</option>`);
+      for(let i=1;i<=10;i++) stringsSelect.innerHTML += `<option>${i}</option>`;
+      keySelect.value = state.key; scaleSelect.value = state.scale; stringsSelect.value = state.strings;
+      keySelect.onchange = update; scaleSelect.onchange = update; stringsSelect.onchange = updateStrings;
+      updateStrings(); window.addEventListener('resize', drawFretboard);
+    }
+
+    function updateStrings(){ state.strings = +stringsSelect.value; tuningsDiv.innerHTML = ''; for(let i=0;i<state.strings;i++){ const idx = state.strings-1-i; const label = document.createElement('label'); label.textContent = `String ${i+1}`; const sel = document.createElement('select'); notes.forEach(n=> sel.innerHTML += `<option>${n}</option>`); sel.value = defaultTunings[state.strings][idx] || 'C'; sel.onchange = update; label.appendChild(sel); tuningsDiv.appendChild(label);} update(); }
+
+    function update(){ state.key = keySelect.value; state.scale = scaleSelect.value; state.tuning = Array.from(tuningsDiv.querySelectorAll('select')).map(s=>s.value); computeScale(); drawFretboard(); renderChordControls(); }
+
+    function computeScale(){ const rootIdx = notes.indexOf(state.key); state.scaleNotes = scales[state.scale].map(i => notes[(rootIdx + i) % 12]); }
+
+    function drawFretboard(){ const W = svg.clientWidth; const bottom = 20; const H = Math.min(W*0.3, window.innerHeight-bottom); const minW = H*0.005, maxW = H*0.02; const totalH = H+bottom; svg.setAttribute('viewBox', `0 0 ${W} ${totalH}`); svg.setAttribute('height', totalH); const S=state.strings, F=state.frets; const seg=W/(F+1), m=seg; svg.innerHTML=''; [[-1,0],[11,12],[23,24]].forEach(([a,b])=>{ const r=document.createElementNS(svg.namespaceURI,'rect'); r.setAttribute('x',m+a*seg); r.setAttribute('y',0); r.setAttribute('width',(b-a)*seg); r.setAttribute('height',H); r.setAttribute('fill','var(--fill-green)'); svg.appendChild(r); }); [3,5,7,9,15,17,19,21].forEach(n=>{ const r=document.createElementNS(svg.namespaceURI,'rect'); r.setAttribute('x',m+(n-1)*seg); r.setAttribute('y',0); r.setAttribute('width',seg); r.setAttribute('height',H); r.setAttribute('fill','var(--fill-blue)'); svg.appendChild(r); }); state.tuning.forEach((_,i)=>{ const y=(i+1)*H/(S+1); const l=document.createElementNS(svg.namespaceURI,'line'); l.setAttribute('x1',0); l.setAttribute('y1',y); l.setAttribute('x2',W); l.setAttribute('y2',y); const w=S>1 ? minW + i*(maxW-minW)/(S-1) : (minW+maxW)/2; l.setAttribute('stroke','var(--string-color)'); l.setAttribute('stroke-width',w); svg.appendChild(l); }); for(let f=0;f<=F;f++){ const x=m+f*seg; const l=document.createElementNS(svg.namespaceURI,'line'); l.setAttribute('x1',x); l.setAttribute('y1',0); l.setAttribute('x2',x); l.setAttribute('y2',H); l.setAttribute('stroke','var(--fret-line)'); l.setAttribute('stroke-width',f===0?4:1); svg.appendChild(l); if(f>0){ const t=document.createElementNS(svg.namespaceURI,'text'); t.setAttribute('x',x-seg/2); t.setAttribute('y',H+14); t.setAttribute('font-size',`${H*0.03}px`); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle'); t.textContent=f; svg.appendChild(t);} } state.tuning.forEach((open,i)=>{ const openIdx=notes.indexOf(open); const y=(i+1)*H/(S+1); for(let f=0;f<=F;f++){ const note=notes[(openIdx+f)%12]; const sel = state.highlight.active ? state.highlight.notes.includes(note) : state.scaleNotes.includes(note); if(!sel) continue; const cx=m+(f-0.5)*seg; const c=document.createElementNS(svg.namespaceURI,'circle'); c.setAttribute('cx',cx); c.setAttribute('cy',y); c.setAttribute('r',H*0.04); const isRoot=note===state.key; c.setAttribute('fill', isRoot?'var(--root-color)':'var(--scale-color)'); c.setAttribute('stroke','#000'); svg.appendChild(c); const t=document.createElementNS(svg.namespaceURI,'text'); t.setAttribute('x',cx); t.setAttribute('y',y+4); t.setAttribute('font-size',`${H*0.03}px`); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle'); t.textContent=note; svg.appendChild(t);} }); }
+
+    function renderChordControls(){
+      chordsSection.innerHTML='';
+      const degCount = state.scaleNotes.length;
+      state.highlight = { active:false, notes:[] };
+      state.chordSelections = {};
+      const extensions = [
+        {offset:0,label:'1st'},
+        {offset:2,label:'3rd'},
+        {offset:4,label:'5th'},
+        {offset:6,label:'7th'},
+        {offset:8,label:'9th'},
+        {offset:10,label:'11th'},
+        {offset:12,label:'13th'}
+      ];
+      state.scaleNotes.forEach((note,i)=>{
+        const sec = document.createElement('div'); sec.className='degree-section';
+        const header = document.createElement('div'); header.className='degree-header';
+        const title = document.createElement('div'); title.className='degree-title';
+        title.textContent = `Degree ${i+1}: ${note}`;
+        const btn = document.createElement('button'); btn.className='highlight-btn'; btn.textContent='Highlight';
+        btn.onclick = ()=>{
+          state.highlight.active = !state.highlight.active;
+          btn.textContent = state.highlight.active ? 'Reset' : 'Highlight';
+          drawFretboard();
+        };
+        header.appendChild(title); header.appendChild(btn);
+        sec.appendChild(header);
+        const btns = document.createElement('div'); btns.className='degree-buttons';
+        extensions.forEach(ext=>{
+          const b = document.createElement('button'); b.textContent = ext.label;
+          b.onclick = ()=>{
+            state.chordSelections[i] = state.chordSelections[i] || [];
+            const arr = state.chordSelections[i];
+            const idx = arr.indexOf(ext.offset);
+            if(idx>=0){ arr.splice(idx,1); b.classList.remove('selected'); }
+            else { arr.push(ext.offset); b.classList.add('selected'); }
+            const notesArr = arr.map(off=> state.scaleNotes[(i+off) % degCount]);
+            state.highlight.notes = notesArr;
+            if(state.highlight.active) drawFretboard();
+          };
+          btns.appendChild(b);
+        });
+        sec.appendChild(btns);
+        chordsSection.appendChild(sec);
+      });
+    }
+
+    window.onload = init;
+  </script>
+<header id="site-header" style="flex-direction: column;">
+<img alt="Pangolino Footer" id="site-logo" src="pangolino2.png" class="pangolino-img wobble" style="width: 200px; height: auto;"/>
+</header>
+<header style="background: #E6E6F7; padding: 1rem; display: flex; justify-content: center; gap: 2rem; font-family: 'Open Sans', sans-serif;">
+<a href="privacy.html" style="text-decoration: none; color: #333; font-weight: bold;">Privacy Policy</a>
+<a href="contacts.html" style="text-decoration: none; color: #333; font-weight: bold;">Contacts</a>
+</header>
 </body>
 </html>
