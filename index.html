@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,52 +9,104 @@
 <meta charset="utf-8">
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Pangolin - Guitar Fretboard Visualizer | Scale e Accordi Interattivi</title>
+<style>
+    :root {
+      --bg-controls: #E6E6F7;
+      --bg-fretboard: #FFFFFF;
+      --bg-chords: var(--bg-controls);
+      --root-color: #FF6961;
+      --scale-color: #D8BFD8;
+      --fill-green: #B0E8CA;
+      --fill-blue: #DAF7F4;
+      --string-color: #525252;
+      --fret-line: #BBBBBB;
+      --text-color: #525252;
+    }
+    html, body { margin: 0; padding: 0; height: 100%; font-family: 'Open Sans', sans-serif; color: var(--text-color); }
+    section { width: 100%; box-sizing: border-box; }
+    #controls {
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      background: white;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+    }
+    #controls label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+      background: var(--bg-controls);
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+    #controls select {
+      padding: 0.2rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    #tunings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: flex-start;
+    }
+    #tunings label {
+      flex: 0 0 auto;
+    }
+    #fretboard-section { background: var(--bg-fretboard); padding: 1rem; }
+    #fretboard { display: block; width: 100%; }
+    #chords-section { background: var(--bg-chords); padding: 1rem; }
+    .degree-section { margin-bottom: 1rem; padding: 0.5rem; background: white;  box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .degree-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+    .degree-title { font-weight: bold; }
+    .degree-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .degree-buttons button { padding: 0.3rem 0.6rem; border: none; border-radius: 4px; cursor: pointer; background: var(--bg-controls); transition: background 0.2s; }
+    .degree-buttons button.selected { background: var(--scale-color); }
+    .highlight-btn { padding: 0.3rem 0.8rem; border: none; border-radius: 4px; cursor: pointer; background: var(--root-color); color: white; }
+    #site-logo { width: 100px; height: 100px; image-rendering: pixelated; }
+    h1 {
+      font-family: 'Sue Ellen Francisco', cursive;
+      text-align: center;
+      margin: 0;
+      color: var(--text-color);
+      font-size: 3rem;
+    }
+    #pangolino1, #pangolino4 {
+      animation: wobble 3s infinite ease-in-out;
+      display: block;
+      margin: 1rem auto;
+    }
+    .pangolino-img {
+      display: block;
+      margin: 1rem auto;
+      width: 200px;
+      height: auto;
+    }
+    .pangolino-img.wobble {
+      animation: wobble 3s infinite ease-in-out;
+    }
+    @keyframes wobble {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(2.5deg); }
+      75% { transform: rotate(-2.5deg); }
+    }
+</style>
 </head>
 <body>
+
 <section style="background-color: #f0f7f4; padding: 1.5rem 1rem 0.5rem 1rem; text-align: center;">
-<h1 style="font-family: 'Sue Ellen Francisco', cursive; font-size: 4rem; margin-bottom: 0rem; color: #333;">PANGOLIN</h1>
-<img alt="Pangolino Title Image" id="pangolino1" src="pangolino1.png" class="pangolino-img wobble"/>
-</section>
-<section style="background-color: #f0f7f4; padding: 1rem 1.5rem; text-align: center;">
-<div style="max-width: 1000px; margin: auto;">
-<p style="font-size: 1.1rem;">
-Pangolin is a free tool designed for modern guitarists. It helps you explore scales, chords and keys through an interactive visualization directly on the guitar fretboard. Intuitive, fast and accessible from any device.
-</p>
-</div>
+  <h1 style="font-family: 'Sue Ellen Francisco', cursive; font-size: 4rem; margin-bottom: 0rem; color: #333;">PANGOLIN</h1>
+  <img alt="Pangolino Title Image" id="pangolino1" src="pangolino1.png" class="pangolino-img wobble"/>
 </section>
 
-<section style="background-color: #E6E6F7; padding: 1rem 1.5rem; text-align: center;">
-  <div style="max-width: 800px; margin: auto;">
-    <h1 style="font-family: 'Sue Ellen Francisco', cursive; font-size: 3rem; margin-bottom: 0.5rem; color: #333;">Fretboard Visualizer</h1>
-    <p style="font-size: 1.05rem;">
-      In the “Fretboard Visualizer” section you can select the key, the musical scale and the number of strings of your guitar. The system shows you the notes of the scale directly on the virtual fretboard. You can customize the tuning of each string to suit your instrument.
-    </p>
-    <div style="text-align:center; margin-top: 1rem;">
-      <img alt="Rotate Smartphone Icon" src="horizontal.png" style="width: 100px; height: auto;"/>
-    </div>
-  </div>
-</section>
+<header id="site-header" style="padding-top: 2rem; padding-bottom: 2rem; display: flex; flex-direction: column; align-items: center;">
+  <img alt="Logo Pangolino" id="pangolino4" src="pangolino4.png" class="pangolino-img wobble" style="width: 200px; height: auto;" />
+  <h1>Fretboard Visualizer</h1>
+</header>
 
-<section id="controls">
-  <label>Root Note<select id="key-select"></select></label>
-  <label>Scale<select id="scale-select"></select></label>
-  <label>Number of Strings<select id="strings-select"></select></label>
-  <div id="tunings"></div>
-</section>
-
-<section id="fretboard-section"><svg id="fretboard"></svg></section>
-
-<section style="background-color: #E6E6F7; padding: 1rem 1.5rem; text-align: center;">
-  <div style="max-width: 800px; margin: auto;">
-    <h1 style="font-family: 'Sue Ellen Francisco', cursive; font-size: 3rem; margin-bottom: 0.5rem; color: #333;">Chord Construction</h1>
-    <p style="font-size: 1.05rem;">
-      In the “Chord Construction” section you can build chords by selecting intervals starting from each degree of the scale. You can view the selected notes in real time on the fretboard and experiment with the sound of each chord within the chosen modal context.
-    </p>
-  </div>
-</section>
-
-<section id="chords-section">
-<!-- Dynamic degree sections here -->
-</section>
 </body>
 </html>
