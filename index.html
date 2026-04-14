@@ -280,7 +280,31 @@
 "Hirajoshi": [0, 2, 3, 7, 8],
 "In Sen": [0, 1, 5, 7, 10],
     };
-    const defaultTunings = { 1:['E'],2:['B','E'],3:['G','B','E'],4:['D','G','B','E'],5:['A','D','G','B','E'],6:['E','A','D','G','B','E'],7:['B','E','A','D','G','B','E'],8:['E','B','E','A','D','G','B','E'],9:['C#','F#','B','E','A','D','G','B','E'],10:['B','E','A','D','G','B','E','A','D','G'] };
+    const defaultTunings = {
+  1:['E'],
+  2:['B','E'],
+  3:['G','B','E'],
+  4:['D','G','B','E'],
+  5:['A','D','G','B','E'],
+  6:['E','A','D','G','B','E'],
+  7:['B','E','A','D','G','B','E'],
+  8:['E','B','E','A','D','G','B','E'],
+  9:['C#','F#','B','E','A','D','G','B','E'],
+  10:['B','E','A','D','G','B','E','A','D','G']
+};
+
+// NUOVO
+const defaultOctaves = {
+  1:[4],
+  2:[3,4],
+  3:[3,3,4],
+  4:[3,3,3,4],
+  5:[2,3,3,3,4],
+  6:[2,2,3,3,3,4],
+  7:[1,2,2,3,3,3,4],
+  8:[1,1,2,2,3,3,3,4],
+  9:[1,1,1,2,2,3,3,3,4],
+  10:[1,1,2,2,3,3,3,4,4,4]
     const keySelect = document.getElementById('key-select');
     const scaleSelect = document.getElementById('scale-select');
     const stringsSelect = document.getElementById('strings-select');
@@ -288,7 +312,7 @@
     const svg = document.getElementById('fretboard');
     const chordsSection = document.getElementById('chords-section');
 
-    let state = { key:'E', scale:'Minor (Aeolian)', strings:8, tuning:[], scaleNotes:[], frets:24, highlight:{ active:false, notes:[] }, chordSelections:{} };
+    let state = { key:'E', scale:'Minor (Aeolian)', strings:8, octaves:[], tuning:[], scaleNotes:[], frets:24, highlight:{ active:false, notes:[] }, chordSelections:{} };
 
     function init() {
       notes.forEach(n=> keySelect.innerHTML += `<option>${n}</option>`);
@@ -299,13 +323,30 @@
       updateStrings(); window.addEventListener('resize', drawFretboard);
     }
 
-    function updateStrings(){ state.strings = +stringsSelect.value; tuningsDiv.innerHTML = ''; for(let i=0;i<state.strings;i++){ const idx = state.strings-1-i; const label = document.createElement('label'); label.textContent = `String ${i+1}`; const sel = document.createElement('select'); notes.forEach(n=> sel.innerHTML += `<option>${n}</option>`); sel.value = defaultTunings[state.strings][idx] || 'C'; sel.onchange = update; label.appendChild(sel); tuningsDiv.appendChild(label);} update(); }
+    function updateStrings(){ state.strings = +stringsSelect.value; tuningsDiv.innerHTML = ''; for(let i=0;i<state.strings;i++){ const idx = state.strings-1-i; const label = document.createElement('label'); label.textContent = `String ${i+1}`; const sel = document.createElement('select'); const octaveSel = document.createElement('select');
+for(let o=0; o<=8; o++){
+  octaveSel.innerHTML += `<option>${o}</option>; notes.forEach(n=> sel.innerHTML += `<option>${n}</option>`); sel.value = defaultTunings[state.strings][idx] || 'C';
+octaveSel.value = defaultOctaves[state.strings][idx] || 3;octaveSel.onchange = update;
+label.appendChild(octaveSel); sel.onchange = update; label.appendChild(sel); tuningsDiv.appendChild(label);} update(); }
 
-    function update(){ state.key = keySelect.value; state.scale = scaleSelect.value; state.tuning = Array.from(tuningsDiv.querySelectorAll('select')).map(s=>s.value); computeScale(); drawFretboard(); renderChordControls(); }
+    function update(){ state.key = keySelect.value; state.scale = scaleSelect.value; const selects = Array.from(tuningsDiv.querySelectorAll('select'));
+state.tuning = [];
+state.octaves = [];
+
+for(let i=0; i<selects.length; i+=2){
+  state.tuning.push(selects[i].value);
+  state.octaves.push(parseInt(selects[i+1].value)); computeScale(); drawFretboard(); renderChordControls(); }
 
     function computeScale(){ const rootIdx = notes.indexOf(state.key); state.scaleNotes = scales[state.scale].map(i => notes[(rootIdx + i) % 12]); }
 
-    function drawFretboard(){ const W = svg.clientWidth; const bottom = 20; const H = Math.min(W*0.3, window.innerHeight-bottom); const minW = H*0.005, maxW = H*0.02; const totalH = H+bottom; svg.setAttribute('viewBox', `0 0 ${W} ${totalH}`); svg.setAttribute('height', totalH); const S=state.strings, F=state.frets; const seg=W/(F+1), m=seg; svg.innerHTML=''; [[-1,0],[11,12],[23,24]].forEach(([a,b])=>{ const r=document.createElementNS(svg.namespaceURI,'rect'); r.setAttribute('x',m+a*seg); r.setAttribute('y',0); r.setAttribute('width',(b-a)*seg); r.setAttribute('height',H); r.setAttribute('fill','var(--fill-green)'); svg.appendChild(r); }); [3,5,7,9,15,17,19,21].forEach(n=>{ const r=document.createElementNS(svg.namespaceURI,'rect'); r.setAttribute('x',m+(n-1)*seg); r.setAttribute('y',0); r.setAttribute('width',seg); r.setAttribute('height',H); r.setAttribute('fill','var(--fill-blue)'); svg.appendChild(r); }); state.tuning.forEach((_,i)=>{ const y=(i+1)*H/(S+1); const l=document.createElementNS(svg.namespaceURI,'line'); l.setAttribute('x1',0); l.setAttribute('y1',y); l.setAttribute('x2',W); l.setAttribute('y2',y); const w=S>1 ? minW + i*(maxW-minW)/(S-1) : (minW+maxW)/2; l.setAttribute('stroke','var(--string-color)'); l.setAttribute('stroke-width',w); svg.appendChild(l); }); for(let f=0;f<=F;f++){ const x=m+f*seg; const l=document.createElementNS(svg.namespaceURI,'line'); l.setAttribute('x1',x); l.setAttribute('y1',0); l.setAttribute('x2',x); l.setAttribute('y2',H); l.setAttribute('stroke','var(--fret-line)'); l.setAttribute('stroke-width',f===0?4:1); svg.appendChild(l); if(f>0){ const t=document.createElementNS(svg.namespaceURI,'text'); t.setAttribute('x',x-seg/2); t.setAttribute('y',H+14); t.setAttribute('font-size',`${H*0.03}px`); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle'); t.textContent=f; svg.appendChild(t);} } state.tuning.forEach((open,i)=>{ const openIdx=notes.indexOf(open); const y=(i+1)*H/(S+1); for(let f=0;f<=F;f++){ const note=notes[(openIdx+f)%12]; const sel = state.highlight.active ? state.highlight.notes.includes(note) : state.scaleNotes.includes(note); if(!sel) continue; const cx=m+(f-0.5)*seg; const c=document.createElementNS(svg.namespaceURI,'circle'); c.setAttribute('cx',cx); c.setAttribute('cy',y); c.setAttribute('r',H*0.04); const isRoot=note===state.key; c.setAttribute('fill', isRoot?'var(--root-color)':'var(--scale-color)'); c.setAttribute('stroke','#000'); svg.appendChild(c); const t=document.createElementNS(svg.namespaceURI,'text'); t.setAttribute('x',cx); t.setAttribute('y',y+4); t.setAttribute('font-size',`${H*0.03}px`); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle'); t.textContent=note; svg.appendChild(t);} }); }
+    function drawFretboard(){ const W = svg.clientWidth; const bottom = 20; const H = Math.min(W*0.3, window.innerHeight-bottom); const minW = H*0.005, maxW = H*0.02; const totalH = H+bottom; svg.setAttribute('viewBox', `0 0 ${W} ${totalH}`); svg.setAttribute('height', totalH); const S=state.strings, F=state.frets; const seg=W/(F+1), m=seg; svg.innerHTML=''; [[-1,0],[11,12],[23,24]].forEach(([a,b])=>{ const r=document.createElementNS(svg.namespaceURI,'rect'); r.setAttribute('x',m+a*seg); r.setAttribute('y',0); r.setAttribute('width',(b-a)*seg); r.setAttribute('height',H); r.setAttribute('fill','var(--fill-green)'); svg.appendChild(r); }); [3,5,7,9,15,17,19,21].forEach(n=>{ const r=document.createElementNS(svg.namespaceURI,'rect'); r.setAttribute('x',m+(n-1)*seg); r.setAttribute('y',0); r.setAttribute('width',seg); r.setAttribute('height',H); r.setAttribute('fill','var(--fill-blue)'); svg.appendChild(r); }); state.tuning.forEach((_,i)=>{ const y=(i+1)*H/(S+1); const l=document.createElementNS(svg.namespaceURI,'line'); l.setAttribute('x1',0); l.setAttribute('y1',y); l.setAttribute('x2',W); l.setAttribute('y2',y); const w=S>1 ? minW + i*(maxW-minW)/(S-1) : (minW+maxW)/2; l.setAttribute('stroke','var(--string-color)'); l.setAttribute('stroke-width',w); svg.appendChild(l); }); for(let f=0;f<=F;f++){ const x=m+f*seg; const l=document.createElementNS(svg.namespaceURI,'line'); l.setAttribute('x1',x); l.setAttribute('y1',0); l.setAttribute('x2',x); l.setAttribute('y2',H); l.setAttribute('stroke','var(--fret-line)'); l.setAttribute('stroke-width',f===0?4:1); svg.appendChild(l); if(f>0){ const t=document.createElementNS(svg.namespaceURI,'text'); t.setAttribute('x',x-seg/2); t.setAttribute('y',H+14); t.setAttribute('font-size',`${H*0.03}px`); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle'); t.textContent=f; svg.appendChild(t);} } state.tuning.forEach((open,i)=>{ const openIdx=notes.indexOf(open); const y=(i+1)*H/(S+1); for(let f=0;f<=F;f++){ const noteIndex = openIdx + f;
+const note = notes[noteIndex % 12];
+const octave = state.octaves[i] + Math.floor(noteIndex / 12); const sel = state.highlight.active ? state.highlight.notes.includes(note) : state.scaleNotes.includes(note); if(!sel) continue; const cx=m+(f-0.5)*seg; const c=document.createElementNS(svg.namespaceURI,'circle'); c.setAttribute('cx',cx); c.setAttribute('cy',y); c.setAttribute('r',H*0.04); const isRoot=note===state.key; c.setAttribute('fill', isRoot?'var(--root-color)':'var(--scale-color)'); c.setAttribute('stroke','#000'); svg.appendChild(c); const t=document.createElementNS(svg.namespaceURI,'text'); t.setAttribute('x',cx); t.setAttribute('y',y+4); t.setAttribute('font-size',`${H*0.03}px`); t.setAttribute('text-anchor','middle'); t.setAttribute('dominant-baseline','middle'); t.textContent = note;
+const sup = document.createElementNS(svg.namespaceURI,'tspan');
+sup.textContent = octave;
+sup.setAttribute('baseline-shift','super');
+sup.setAttribute('font-size','0.6em');
+t.appendChild(sup); svg.appendChild(t);} }); }
 
     function renderChordControls(){
       chordsSection.innerHTML='';
